@@ -7,16 +7,16 @@ const User = (props)=>{
   const [count] = useState(0);
   const [count2, setCount2] = useState(0)
 
-  useEffect(()=>{
-    // const timer = setInterval(() => {
-    //   console.log('User Component Mounted');
-    // }, 1000);
+  // useEffect(()=>{
+  //   const timer = setInterval(() => {
+  //     console.log('User Component Mounted');
+  //   }, 1000);
 
-    return(()=>{
+  //   return(()=>{
       
-      clearInterval(timer);
-    })
-  },[])
+  //     clearInterval(timer);
+  //   })
+  // },[])
   
 
   return (
