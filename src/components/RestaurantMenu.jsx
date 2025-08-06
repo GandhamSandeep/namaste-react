@@ -1,37 +1,44 @@
 import { useState, useEffect } from 'react';
 import Shimmer from './Shimmer';
-import { MENU_API_URL } from '../utils/constants';
 import { useParams } from 'react-router-dom';
 import useRestaurantMenu from '../utils/useRestaurantMenu';
+import RestaurantCategory from './RestaturantCategory';
 
 const RestaurantMenu = () => {
   
   const {resId} = useParams();
 
-  console.log(useParams());
-
-  const [resInfo] = useRestaurantMenu(resId);
-
-
+  const resInfo = useRestaurantMenu(resId);
+  
+  const [showIndex, setShowIndex ] = useState(0);
 
   if (resInfo === null) return <Shimmer />;
+
+
 
   const info = resInfo?.cards?.[2]?.card?.card?.info;
   const { name, cuisines, costForTwoMessage } = info;
 
-  const { itemCards } = 
-    resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card;
+  const { itemCards } = resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card;
   
-  console.log(itemCards);
+  const categories = resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter((c)=>{ 
+    return c.card?.card?.["@type"] === "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+  })
+
 
   return (
-    <div className="menu">
-      <h1>{name}</h1>
-      <p>{cuisines.join(',')} - {costForTwoMessage}</p>
-      <h2>Menu</h2>
-      <ul>
-        {itemCards?.map(item => <li key={item.card?.info?.id}>{item.card?.info?.name} - {item.card?.info?.price}</li>)}
-      </ul>
+    <div className="text-center">
+      <h1 className="font-bold my-6 text-2xl">{name}</h1>
+      <p className="font-bold text-lg">{cuisines.join(',')} - {costForTwoMessage}</p>
+      {categories.map((category, index)=>{
+        // Controlled Component
+        return <RestaurantCategory 
+        showItems={index === showIndex ? true : false}
+        key={category?.card?.card.title} 
+        data={category?.card?.card} 
+        setShowIndex={()=> setShowIndex(prev => prev === index ? null : index)} index={index}
+        />
+      })}
     </div>    
   );
 };

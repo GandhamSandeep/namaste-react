@@ -8,6 +8,8 @@ import ContactUs from './components/ContactUs';
 import RestaurantMenu from './components/RestaurantMenu';
 // import Grocery from './components/Grocery';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import UserContext from './utils/UserContext';
 
 
 
@@ -15,11 +17,25 @@ const Grocery = lazy(() => import('./components/Grocery'));
 const About = lazy(() => import('./components/About'));
 
 const AppLayout = ()=>{
+
+  const [ userName , setUserName ] = useState();
+
+  useEffect(()=>{
+    // Making an Dummy  API call to fetch user data 
+    const data = {
+      name: "Sandeep",
+    }
+    setUserName(data.name);
+  },[])
+
+
   return (
-    <div className="app">
-      <Header />
-      <Outlet />
-    </div>
+    <UserContext.Provider value={{loggedInUser: userName, setUserName}}>
+      <div className="app">
+        <Header />
+        <Outlet />
+      </div>
+    </UserContext.Provider>
   )
 }
 

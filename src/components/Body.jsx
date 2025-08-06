@@ -1,8 +1,10 @@
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard, { withPromotedLabel } from "./RestaurantCard";
 import { useState, useEffect } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import { RESTAURANT_LIST_API_URL } from "../utils/constants";
+import { useContext } from 'react';
+import UserContext from "../utils/UserContext";
 
 
 
@@ -12,6 +14,10 @@ const Body = ()=>{
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
 
+  const RestaurantCardPromoted = withPromotedLabel(RestaurantCard);
+
+  const {loggedInUser, setUserName} = useContext(UserContext);
+
   useEffect(()=>{
     fetchData();
   }, []);
@@ -20,8 +26,8 @@ const Body = ()=>{
     const data = await fetch( RESTAURANT_LIST_API_URL );
     const json = await data.json();
     console.log(json.data);
-    setListOfRestaurants(json?.data?.cards?.[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-    setFilteredRestaurants(json?.data?.cards?.[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    setListOfRestaurants(json?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    setFilteredRestaurants(json?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
   }
 
 
@@ -46,8 +52,8 @@ const Body = ()=>{
             setFilteredRestaurants(filteredRestaurants);
           }}>Search</button>
         </div>
-       <div className="m-4 p-4 flex items-center">
-        <button className="px-4 py-1 bg-blue-400 ml-4 cursor-pointer rounded-lg text-white" 
+        <div className="m-4 p-4 flex items-center">
+          <button className="px-4 py-1 bg-blue-400 ml-4 cursor-pointer rounded-lg text-white" 
             onClick={()=>{
             const filteredList = listOfRestaurants.filter(
               (res)=> res.info.avgRating > 4
@@ -55,12 +61,22 @@ const Body = ()=>{
               setListOfRestaurants(filteredList);
             }}>Top Rated Restaurants
           </button>
-       </div>
+        </div>
+        <div className="m-4 p-4 flex items-center">
+          <label>UserName:</label>
+          <input type="text" value={loggedInUser} className="border border-solid border-black pl-2 ml-2"
+          onChange = {(e)=>{
+            setUserName(e.target.value);
+          }}
+           />
+        </div>
       </div>
       <div className="flex flex-wrap gap-1">
         {
           filteredRestaurants.map(restaurant => 
-          <Link key={restaurant.info.id} to={"restaurants/"+restaurant.info.id}><RestaurantCard resData = {restaurant}  /></Link>
+          <Link key={restaurant.info.id} to={"restaurants/"+restaurant.info.id}>
+            {restaurant.info.isOpen ? <RestaurantCardPromoted resData = {restaurant} /> : <RestaurantCard resData = {restaurant}  /> }
+          </Link>
           )
         }
       </div>
