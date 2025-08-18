@@ -39,7 +39,7 @@ const Body = ()=>{
     <div className="body">
       <div className="filter flex">
         <div className="m-4 p-4">
-          <input type="text" className="border border-solid border-black" value={searchText} onChange={(event)=>{
+          <input data-testid="searchInput" type="text" className="border border-solid border-black" value={searchText} onChange={(event)=>{
             //update the search text
             setSearchText(event.target.value); 
           }} />

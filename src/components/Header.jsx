@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 
 const Header = ()=>{
 
-  const [btnName, setBtnName] = useState("login");
+  const [btnName, setBtnName] = useState("Login");
 
   const onlineStatus = useOnlineStatus();
 
@@ -15,7 +15,7 @@ const Header = ()=>{
 
   // Subscribing to the Store Using Selector
   const cartItems = useSelector((store) => store.cart.items);
-  console.log(cartItems)
+  // console.log(cartItems)
 
   return (
     <div className="flex justify-between items-center bg-pink-100 shadow-lg mb-2 h-20">
@@ -43,7 +43,7 @@ const Header = ()=>{
             <Link to="/cart">Cart({cartItems.length} items)</Link>
           </li>
           <li className="px-4 font-bold">{loggedInUser} </li>
-          <button className="login" onClick={()=>{
+          <button onClick={()=>{
             btnName === "Login" 
             ? setBtnName("Logout") 
             : setBtnName("Login");      
